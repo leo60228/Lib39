@@ -20,6 +20,7 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.RecipeHolder;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
@@ -50,7 +51,8 @@ public class SoakingHandler {
 			while (!unmatched.isEmpty()) {
 				SoakingRecipe recipe = null;
 				Set<ItemEntity> matched = Sets.newHashSet();
-				for (SoakingRecipe sr : world.getServer().getRecipeManager().listAllOfType(Lib39Machination.RecipeTypes.SOAKING)) {
+				for (RecipeHolder<SoakingRecipe> holder : world.getServer().getRecipeManager().listAllOfType(Lib39Machination.RecipeTypes.SOAKING)) {
+					SoakingRecipe sr = holder.value();
 					if (sr.getCatalyst().test(f)) {
 						boolean matchedAll = true;
 						Set<ItemEntity> maybeMatched = Sets.newHashSet();

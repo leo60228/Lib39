@@ -1,6 +1,6 @@
 package com.unascribed.lib39.phantom.mixin.client;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import net.minecraft.client.gui.hud.in_game.InGameOverlayRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -14,7 +14,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.hud.InGameOverlayRenderer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -37,8 +36,8 @@ public class MixinInGameOverlayRenderer {
 		lib39Phantom$currentlyCollidingPos = null;
 	}
 	
-	@ModifyExpressionValue(at=@At(value="INVOKE", target="net/minecraft/world/World.getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState;", ordinal = 0),
-			method="getInWallBlockState")
+	@ModifyVariable(at=@At(value="INVOKE_ASSIGN", target="net/minecraft/world/World.getBlockState(Lnet/minecraft/util/math/BlockPos;)Lnet/minecraft/block/BlockState;"),
+			ordinal=0, method="getInWallBlockState")
 	private static BlockState lib39Phantom$replaceBlockState(BlockState in) {
 		if (lib39Phantom$currentlyCollidingPos == null) return in;
 		World world = MinecraftClient.getInstance().world;

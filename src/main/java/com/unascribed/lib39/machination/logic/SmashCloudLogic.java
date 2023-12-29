@@ -6,6 +6,7 @@ import com.unascribed.lib39.core.P39;
 import com.unascribed.lib39.machination.recipe.PistonSmashingRecipe;
 
 import net.minecraft.entity.AreaEffectCloudEntity;
+import net.minecraft.recipe.RecipeHolder;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
@@ -24,7 +25,7 @@ public class SmashCloudLogic {
 			AreaEffectCloudEntity cloud = clouds.get(0);
 			Identifier id = Identifier.tryParse(cloud.getName().getString().substring(MAGIC.length()));
 			if (id != null) {
-				PistonSmashingRecipe r = (PistonSmashingRecipe) world.getRecipeManager().get(id).filter(o -> o instanceof PistonSmashingRecipe).orElse(null);
+				PistonSmashingRecipe r = (PistonSmashingRecipe) world.getRecipeManager().get(id).filter(o -> o.value() instanceof PistonSmashingRecipe).map(RecipeHolder::value).orElse(null);
 				if (r != null && !r.getCloudOutput().isEmpty()) {
 					cloud.setRadius(cloud.getRadius() - 0.25f);
 					if (cloud.getRadius() < 0.25f) cloud.discard();

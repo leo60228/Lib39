@@ -38,7 +38,7 @@ public abstract class MixinGlassBottleDispenserBehavior extends FallibleItemDisp
 			"dispenseSilently(Lnet/minecraft/util/math/BlockPointer;Lnet/minecraft/item/ItemStack;)Lnet/minecraft/item/ItemStack;", // quilt mappings
 	}, cancellable=true, remap=false)
 	public void lib39Machination$collectSmashCloud(BlockPointer ptr, ItemStack stack, CallbackInfoReturnable<ItemStack> ci) {
-		PistonSmashingRecipe r = SmashCloudLogic.consumeGasCloud(ptr.getWorld(), new Box(ptr.getPos()).expand(0.5));
+		PistonSmashingRecipe r = SmashCloudLogic.consumeGasCloud(ptr.level(), new Box(ptr.pos()).expand(0.5));
 		if (r != null) {
 			setSuccess(true);
 			Object self = this;

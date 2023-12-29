@@ -35,6 +35,10 @@ public class BlockNetworkManager extends PersistentState {
 	public static Identifier getId(BlockNetworkType<?, ?> type) {
 		return networkTypes.inverse().get(type);
 	}
+
+	public static PersistentState.C_vpqwshwc<BlockNetworkManager> getPersistentStateType(ServerWorld world) {
+		return new PersistentState.C_vpqwshwc<>(() -> new BlockNetworkManager(world), tag -> BlockNetworkManager.readNbt(world, tag), null);
+	}
 	
 	protected final ServerWorld world;
 	private final Map<UUID, BlockNetwork<?, ?>> networks = Maps.newHashMap();
@@ -46,8 +50,7 @@ public class BlockNetworkManager extends PersistentState {
 
 	public static BlockNetworkManager get(ServerWorld world) {
 		BlockNetworkManager fn = world.getPersistentStateManager().getOrCreate(
-				nbt -> BlockNetworkManager.readNbt(world, nbt),
-				() -> new BlockNetworkManager(world),
+				getPersistentStateType(world),
 				"lib39_mesh_networks");
 		return fn;
 	}

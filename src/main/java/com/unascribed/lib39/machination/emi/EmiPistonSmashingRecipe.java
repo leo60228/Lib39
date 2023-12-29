@@ -39,7 +39,6 @@ public class EmiPistonSmashingRecipe implements EmiRecipe {
 	}
 	
 	public EmiPistonSmashingRecipe(Identifier id, List<Block> input, List<Block> catalysts, EmiStack output, int cloudColor, EmiStack cloudOutput) {
-		this.id = id;
 		this.input = input;
 		this.catalysts = catalysts;
 		this.output = output;

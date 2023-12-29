@@ -5,10 +5,10 @@ import com.unascribed.lib39.keygen.IBXMAudioStream.InterpolationMode;
 
 import com.google.common.base.Ascii;
 
-import net.minecraft.resource.pack.metadata.ResourceMetadataReader;
+import net.minecraft.resource.pack.metadata.ResourceMetadataSectionReader;
 import net.minecraft.util.JsonHelper;
 
-public class IBXMResourceMetadataReader implements ResourceMetadataReader<IBXMResourceMetadata> {
+public class IBXMResourceMetadataReader implements ResourceMetadataSectionReader<IBXMResourceMetadata> {
 	@Override
 	public IBXMResourceMetadata fromJson(JsonObject jsonObject) {
 		return new IBXMResourceMetadata(

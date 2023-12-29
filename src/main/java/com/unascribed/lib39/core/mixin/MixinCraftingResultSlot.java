@@ -2,6 +2,7 @@ package com.unascribed.lib39.core.mixin;
 
 import java.util.Optional;
 
+import net.minecraft.recipe.RecipeHolder;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -31,9 +32,9 @@ public class MixinCraftingResultSlot {
 	protected void lib39Core$onCrafted(ItemStack stack, CallbackInfo ci) {
 		if (player == null) return;
 		if (player.getWorld().isClient) return;
-		Optional<CraftingRecipe> recipe = player.getWorld().getRecipeManager().getFirstMatch(RecipeType.CRAFTING, input, player.getWorld());
-		if (recipe.isPresent() && Lib39Mod.craftingSounds.containsKey(recipe.get().getId())) {
-			player.getWorld().playSound(null, player.getX(), player.getY(), player.getZ(), Lib39Mod.craftingSounds.get(recipe.get().getId()), player.getSoundCategory(), (float) 1, (float) 1);
+		Optional<RecipeHolder<CraftingRecipe>> recipe = player.getWorld().getRecipeManager().getFirstMatch(RecipeType.CRAFTING, input, player.getWorld());
+		if (recipe.isPresent() && Lib39Mod.craftingSounds.containsKey(recipe.get().id())) {
+			player.getWorld().playSound(null, player.getX(), player.getY(), player.getZ(), Lib39Mod.craftingSounds.get(recipe.get().id()), player.getSoundCategory(), (float) 1, (float) 1);
 		}
 	}
 	

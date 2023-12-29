@@ -49,7 +49,7 @@ public class MixinSoundLoader {
 					Resource resource = lib39$factory.getResource(id).orElse(null);
 					InputStream inputStream = resource.open();
 					DelegateFactory factory;
-					IBXMResourceMetadata meta = resource.getMetadata().readMetadata(IBXMResourceMetadata.READER).orElse(null);
+					IBXMResourceMetadata meta = resource.getMetadata().readSection(IBXMResourceMetadata.READER).orElse(null);
 					boolean isAmiga = path.endsWith(".mod") || path.endsWith(".mod.bz2");
 					InterpolationMode defaultMode = isAmiga ? InterpolationMode.LINEAR : InterpolationMode.SINC;
 					if (meta != null) {

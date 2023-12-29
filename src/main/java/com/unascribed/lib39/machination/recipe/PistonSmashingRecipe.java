@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unascribed.lib39.machination.Lib39Machination;
 import com.unascribed.lib39.machination.ingredient.BlockIngredient;
 
@@ -15,6 +17,7 @@ import net.minecraft.entity.effect.StatusEffectInstance;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.recipe.CookingCategory;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
@@ -25,11 +28,11 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.world.World;
 
 public class PistonSmashingRecipe implements Recipe<Inventory> {
 
-	protected final Identifier id;
 	protected final String group;
 	protected final BlockIngredient input;
 	protected final BlockIngredient catalyst;
@@ -40,8 +43,7 @@ public class PistonSmashingRecipe implements Recipe<Inventory> {
 	protected final ItemStack cloudOutput;
 	protected final List<StatusEffectInstance> cloudEffects;
 
-	public PistonSmashingRecipe(Identifier id, String group, BlockIngredient input, BlockIngredient catalyst, ItemStack output, boolean hasCloud, int cloudColor, int cloudSize, ItemStack cloudOutput, List<StatusEffectInstance> cloudEffects) {
-		this.id = id;
+	public PistonSmashingRecipe(String group, BlockIngredient input, BlockIngredient catalyst, ItemStack output, boolean hasCloud, int cloudColor, int cloudSize, ItemStack cloudOutput, List<StatusEffectInstance> cloudEffects) {
 		this.group = group;
 		this.input = input;
 		this.catalyst = catalyst;
@@ -110,11 +112,6 @@ public class PistonSmashingRecipe implements Recipe<Inventory> {
 	public String getGroup() {
 		return group;
 	}
-
-	@Override
-	public Identifier getId() {
-		return id;
-	}
 	
 	@Override
 	public boolean isIgnoredInRecipeBook() {
@@ -132,9 +129,24 @@ public class PistonSmashingRecipe implements Recipe<Inventory> {
 	}
 	
 	public static class Serializer implements RecipeSerializer<PistonSmashingRecipe> {
+		public static final Codec<PistonSmashingRecipe> CODEC = RecordCodecBuilder.create(
+				instance -> instance.group(
+								Codecs.method_53049(Codec.STRING, "group", "").forGetter(r -> r.group),
+								BlockIngredient.field_46096.fieldOf("ingredient").forGetter(r -> r.input),
+								Registries.ITEM.getCodec().xmap(ItemStack::new, ItemStack::getItem).fieldOf("result").forGetter(abstractCookingRecipe -> abstractCookingRecipe.result),
+								Codec.FLOAT.fieldOf("experience").orElse(0.0F).forGetter(abstractCookingRecipe -> abstractCookingRecipe.experience),
+								Codec.INT.fieldOf("cookingtime").orElse(i).forGetter(abstractCookingRecipe -> abstractCookingRecipe.cookingTime)
+				)
+						.apply(instance, PistonSmashingRecipe::new)
+		);
 
 		@Override
-		public PistonSmashingRecipe read(Identifier id, JsonObject obj) {
+		public Codec<PistonSmashingRecipe> getCodec() {
+			return CODEC;
+		}
+
+		@Override
+		public PistonSmashingRecipe read(JsonObject obj) {
 			String group = JsonHelper.getString(obj, "group", "");
 			BlockIngredient input = BlockIngredient.fromJson(obj.get("input"));
 			BlockIngredient catalyst = BlockIngredient.fromJson(obj.get("catalysts"));
@@ -168,11 +180,11 @@ public class PistonSmashingRecipe implements Recipe<Inventory> {
 					}
 				}
 			}
-			return new PistonSmashingRecipe(id, group, input, catalyst, output, hasCloud, cloudColor, cloudSize, cloudOutput, cloudEffects);
+			return new PistonSmashingRecipe(group, input, catalyst, output, hasCloud, cloudColor, cloudSize, cloudOutput, cloudEffects);
 		}
 
 		@Override
-		public PistonSmashingRecipe read(Identifier id, PacketByteBuf buf) {
+		public PistonSmashingRecipe read(PacketByteBuf buf) {
 			String group = buf.readString(32767);
 			BlockIngredient input = BlockIngredient.read(buf);
 			BlockIngredient catalyst = BlockIngredient.read(buf);
@@ -188,10 +200,10 @@ public class PistonSmashingRecipe implements Recipe<Inventory> {
 				cloudOutput = buf.readItemStack();
 				int cloudEffectCount = buf.readVarInt();
 				for (int i = 0; i < cloudEffectCount; i++) {
-					cloudEffects.add(new StatusEffectInstance(StatusEffect.byRawId(buf.readVarInt()), buf.readVarInt(), buf.readVarInt()));
+					cloudEffects.add(new StatusEffectInstance(Registries.STATUS_EFFECT.get(Identifier.tryParse(buf.readString())), buf.readVarInt(), buf.readVarInt()));
 				}
 			}
-			return new PistonSmashingRecipe(id, group, input, catalyst, output, hasCloud, cloudColor, cloudSize, cloudOutput, cloudEffects);
+			return new PistonSmashingRecipe(group, input, catalyst, output, hasCloud, cloudColor, cloudSize, cloudOutput, cloudEffects);
 		}
 
 		@Override
@@ -207,7 +219,7 @@ public class PistonSmashingRecipe implements Recipe<Inventory> {
 				buf.writeItemStack(recipe.cloudOutput);
 				buf.writeVarInt(recipe.cloudEffects.size());
 				for (StatusEffectInstance sei : recipe.cloudEffects) {
-					buf.writeVarInt(StatusEffect.getRawId(sei.getEffectType()));
+					buf.writeString(Registries.STATUS_EFFECT.getId(sei.getEffectType()).toString());
 					buf.writeVarInt(sei.getDuration());
 					buf.writeVarInt(sei.getAmplifier());
 				}

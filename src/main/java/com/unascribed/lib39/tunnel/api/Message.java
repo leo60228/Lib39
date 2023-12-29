@@ -16,8 +16,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.packet.c2s.play.CustomPayloadC2SPacket;
-import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
+import net.minecraft.network.packet.c2s.common.CustomPayloadC2SPacket;
+import net.minecraft.network.packet.s2c.common.CustomPayloadS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 
@@ -88,7 +88,7 @@ public abstract class Message {
 	void doHandleServer(PlayerEntity sender) {
 		if (sender == null) throw new IllegalArgumentException("sender is null while handling "+getClass().getName());
 		if (sender.isSpectator() && !validForSpectators) {
-			Lib39Log.warn("Spectator {} sent {}, which is not valid for spectators. Ignoring.", sender.getEntityName(), getClass().getName());
+			Lib39Log.warn("Spectator {} sent {}, which is not valid for spectators. Ignoring.", sender.getName(), getClass().getName());
 			return;
 		}
 		if (async) {
@@ -129,7 +129,7 @@ public abstract class Message {
 	public void sendTo(PlayerEntity player) {
 		if (env == EnvType.SERVER) wrongSide();
 		if (player instanceof ServerPlayerEntity) {
-			((ServerPlayerEntity) player).networkHandler.sendPacket(toClientboundVanillaPacket());
+			((ServerPlayerEntity) player).networkHandler.send(toClientboundVanillaPacket());
 		}
 	}
 	
@@ -142,7 +142,7 @@ public abstract class Message {
 		if (env == EnvType.CLIENT) wrongSide();
 		ClientPlayNetworkHandler conn = MinecraftClient.getInstance().getNetworkHandler();
 		if (conn == null) throw new IllegalStateException("Cannot send a message while not connected");
-		conn.sendPacket(toServerboundVanillaPacket());
+		conn.getConnection().send(toServerboundVanillaPacket());
 	}
 	
 	/**
@@ -150,7 +150,7 @@ public abstract class Message {
 	 * use cases.
 	 */
 	public final CustomPayloadC2SPacket toServerboundVanillaPacket() {
-		return new CustomPayloadC2SPacket(ctx.channel, ctx.getPayloadFrom(this));
+		return new CustomPayloadC2SPacket(ctx.getPayloadFrom(this));
 	}
 	
 	/**
@@ -158,7 +158,7 @@ public abstract class Message {
 	 * use cases.
 	 */
 	public final CustomPayloadS2CPacket toClientboundVanillaPacket() {
-		return new CustomPayloadS2CPacket(ctx.channel, ctx.getPayloadFrom(this));
+		return new CustomPayloadS2CPacket(ctx.getPayloadFrom(this));
 	}
 	
 	

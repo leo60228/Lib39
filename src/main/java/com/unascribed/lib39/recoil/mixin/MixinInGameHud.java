@@ -4,7 +4,7 @@ import com.unascribed.lib39.recoil.api.RecoilEvents;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.hud.InGameHud;
+import net.minecraft.client.gui.hud.in_game.InGameHud;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

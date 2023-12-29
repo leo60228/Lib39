@@ -224,7 +224,7 @@ public class HaloRenderer {
 			while (iter.hasNext()) {
 				long pos = iter.nextLong();
 				Box box = boundingBoxes.get(pos);
-				if (box != null && wrc.frustum().isVisible(box) && wrc.worldRenderer().isChunkBuilt(ChunkSectionPos.from(pos).getMinPos())) {
+				if (box != null && wrc.frustum().isVisible(box) && wrc.worldRenderer().method_40050(ChunkSectionPos.from(pos).getMinPos())) {
 					matrices.push();
 						matrices.translate(minX(pos), minY(pos), minZ(pos));
 						VertexBuffer buf = buffers.get(pos);

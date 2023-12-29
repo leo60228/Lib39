@@ -1,5 +1,7 @@
 package com.unascribed.lib39.tunnel.mixin;
 
+import net.minecraft.client.network.AbstractClientNetworkHandler;
+import net.minecraft.network.packet.s2c.common.CustomPayloadS2CPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -9,21 +11,18 @@ import com.unascribed.lib39.tunnel.api.NetworkContext;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.network.packet.s2c.play.CustomPayloadS2CPacket;
 
 @Environment(EnvType.CLIENT)
-@Mixin(ClientPlayNetworkHandler.class)
+@Mixin(AbstractClientNetworkHandler.class)
 public class MixinClientPlayNetworkHandler {
-	
-	@Inject(at=@At("HEAD"), method="onCustomPayload(Lnet/minecraft/network/packet/s2c/play/CustomPayloadS2CPacket;)V", cancellable=true)
+	@Inject(at=@At("HEAD"), method="onCustomPayload", cancellable=true)
 	public void onCustomPayload(CustomPayloadS2CPacket packet, CallbackInfo ci) {
 		for (NetworkContext ctx : NetworkContext.contexts) {
-			if (ctx.handleCustomPacket((ClientPlayNetworkHandler)(Object)this, packet)) {
+			if (ctx.handleCustomPacket((AbstractClientNetworkHandler)(Object)this, packet)) {
 				ci.cancel();
 				return;
 			}
 		}
 	}
-	
+
 }

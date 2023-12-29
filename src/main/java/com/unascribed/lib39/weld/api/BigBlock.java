@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import net.minecraft.block.AirBlock;
 import org.jetbrains.annotations.Nullable;
 
-import com.unascribed.lib39.core.P39;
 import com.unascribed.lib39.weld.Lib39Weld;
 
 import com.google.common.collect.ImmutableList;
@@ -138,9 +138,9 @@ public abstract class BigBlock extends Block {
 		super.onBlockAdded(state, world, pos, oldState, notify);
 		world.scheduleBlockTick(pos, this, 1);
 	}
-	
+
 	@Override
-	public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+	public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
 		if (player.isCreative()) {
 			BlockPos origin = pos.add(-getX(state), -getY(state), -getZ(state));
 			for (int y = 0; y < getYSize(state); y++) {
@@ -154,6 +154,7 @@ public abstract class BigBlock extends Block {
 			BlockSoundGroup sg = getSoundGroup(state);
 			world.playSound(pos.getX()+0.5, pos.getY()+0.5, pos.getZ()+0.5, sg.getBreakSound(), SoundCategory.BLOCKS, (sg.getVolume() + 1) / 2f, sg.getPitch() * 0.8f, false);
 		}
+		return Blocks.AIR.getDefaultState();
 	}
 	
 	@Override

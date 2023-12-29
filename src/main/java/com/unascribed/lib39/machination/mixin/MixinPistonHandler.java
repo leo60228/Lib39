@@ -2,13 +2,14 @@ package com.unascribed.lib39.machination.mixin;
 
 import java.util.List;
 
-import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.recipe.RecipeHolder;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 import com.unascribed.lib39.core.P39;
 import com.unascribed.lib39.machination.Lib39Machination;
@@ -36,14 +37,16 @@ public class MixinPistonHandler {
 	@Shadow @Final
 	private List<BlockPos> brokenBlocks;
 	
-	@Inject(at=@At(value="INVOKE", target="net/minecraft/block/BlockState.getPistonBehavior()Lnet/minecraft/block/piston/PistonBehavior;"), method="tryMove", cancellable=true)
-	public void lib39Machination$trySmash(BlockPos pos, Direction dir, CallbackInfoReturnable<Boolean> ci, @Local(ordinal = 1) BlockPos moving) {
+	@Inject(at=@At(value="INVOKE", target="net/minecraft/block/BlockState.getPistonBehavior()Lnet/minecraft/block/piston/PistonBehavior;"), method="tryMove", cancellable=true,
+			locals=LocalCapture.CAPTURE_FAILHARD)
+	public void lib39Machination$trySmash(BlockPos pos, Direction dir, CallbackInfoReturnable<Boolean> ci, BlockState state, int i, int j, int k, BlockPos moving) {
 		BlockState surrounding1 = world.getBlockState(moving.offset(dir));
 		BlockState surrounding2 = world.getBlockState(moving.offset(dir.getOpposite()));
 		if (surrounding1.getBlock() != surrounding2.getBlock()) return;
 		Block catalyst = surrounding1.getBlock();
 		BlockState movingState = world.getBlockState(moving);
-		for (PistonSmashingRecipe r : world.getRecipeManager().listAllOfType(Lib39Machination.RecipeTypes.PISTON_SMASHING)) {
+		for (RecipeHolder<PistonSmashingRecipe> holder : world.getRecipeManager().listAllOfType(Lib39Machination.RecipeTypes.PISTON_SMASHING)) {
+			PistonSmashingRecipe r = holder.value();
 			if (r.getCatalyst().test(catalyst)) {
 				if (r.getInput().test(movingState.getBlock())) {
 					if (world.breakBlock(moving, false)) {

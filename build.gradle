@@ -289,7 +289,7 @@ evaluationDependsOnChildren()
 afterEvaluate {
 	defineModule 'core', []
 	defineModule 'lockpick', ['core']
-	defineModule 'tunnel', ['core']
+	// defineModule 'tunnel', ['core']
 	defineModule 'phantom', ['core']
 	defineModule 'waypoint', ['core',
 		"fapi:fabric-transitive-access-wideners-v1:?",
