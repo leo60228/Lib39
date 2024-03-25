@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.lwjgl.system.Platform;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -34,8 +35,7 @@ import net.fabricmc.loader.api.FabricLoader;
 @Mixin(Window.class)
 public class MixinWindow {
 
-	@Inject(at=@At(value="INVOKE", target="org/lwjgl/glfw/GLFW.glfwCreateWindow(IILjava/lang/CharSequence;JJ)J", remap=false),
-			method="<init>")
+	@Inject(at=@At(value="FIELD", target="com/mojang/blaze3d/glfw/Window.handle:J", opcode=Opcodes.PUTFIELD), method="<init>")
 	private void lib39Deferral$modifyGlfwHints(CallbackInfo ci) {
 		if (Platform.get() == Platform.MACOSX) {
 			Lib39Deferral.log.info("Not enabling OpenGL compat profile as we are on macOS.");
