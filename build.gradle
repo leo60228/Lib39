@@ -22,8 +22,8 @@ if (System.getenv("CURSE_TOKEN")) {
 	apply plugin: "com.matthewprenger.cursegradle"
 }
 
-sourceCompatibility = JavaVersion.toVersion(17)
-targetCompatibility = JavaVersion.toVersion(17)
+sourceCompatibility = JavaVersion.toVersion(21)
+targetCompatibility = JavaVersion.toVersion(21)
 
 archivesBaseName = project.archives_base_name
 version = project.mod_version
@@ -82,10 +82,10 @@ dependencies {
 	mappings "org.quiltmc:quilt-mappings:${mappings_version}:intermediary-v2"
 	modImplementation "net.fabricmc:fabric-loader:${loader_version}"
 
-	modCompileOnly "dev.emi:emi-fabric:1.1.4+1.20.1"
-	modCompileOnly "me.shedaniel:RoughlyEnoughItems-api:12.1.718"
+	modCompileOnly "dev.emi:emi-fabric:1.1.6+1.20.6"
+	modCompileOnly "me.shedaniel:RoughlyEnoughItems-api:15.0.728"
 	// the API jar doesn't get remapped by Loom because it doesn't have a fabric.mod.json
-	modCompileOnly("mezz.jei:jei-1.20.1-fabric:15.3.0.4") { transitive = false }
+	modCompileOnly("mezz.jei:jei-1.20.4-fabric:17.3.0.52") { transitive = false }
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
@@ -100,7 +100,7 @@ java {
 }
 
 compileJava {
-	options.release = 17
+	options.release = 21
 }
 
 tasks.validateAccessWidener {
