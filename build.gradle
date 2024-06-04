@@ -291,25 +291,25 @@ afterEvaluate {
 	defineModule 'lockpick', ['core']
 	// defineModule 'tunnel', ['core']
 	defineModule 'phantom', ['core']
-	defineModule 'waypoint', ['core',
+	/* defineModule 'waypoint', ['core',
 		"fapi:fabric-transitive-access-wideners-v1:?",
 		"fapi:fabric-lifecycle-events-v1:?",
 		"fapi:fabric-rendering-v1:?",
 		"fapi:fabric-resource-loader-v0:?"
-	]
+	] */
 	defineModule 'weld', ['core', "fapi:fabric-resource-loader-v0:?"]
-	defineModule 'sandman', ['core', "fapi:fabric-lifecycle-events-v1:?"]
+	// defineModule 'sandman', ['core', "fapi:fabric-lifecycle-events-v1:?"]
 	defineModule 'crowbar', ['core', "fapi:fabric-api-base:?"]
 	defineModule 'keygen', ['core']
 	defineModule 'dessicant', ['core']
 	defineModule 'deferral', []
-	defineModule 'machination', ['core',
+	/* defineModule 'machination', ['core',
 		"fapi:fabric-lifecycle-events-v1:?",
 		"fapi:fabric-resource-loader-v0:?"
-	]
+	] */
 	defineModule 'util', ['core']
 	defineModule 'ripple', ['core']
-	defineModule 'recoil', ['core', "fapi:fabric-api-base:?", "fapi:fabric-networking-api-v1:?"]
+	// defineModule 'recoil', ['core', "fapi:fabric-api-base:?", "fapi:fabric-networking-api-v1:?"]
 	defineModule 'mesh', ['core', "fapi:fabric-lifecycle-events-v1:?"]
 	defineModule 'aqi', ['core']
 }
