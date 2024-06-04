@@ -117,7 +117,7 @@ public final class AutoRegistry {
 		Identifier id;
 		if (ann != null) {
 			if (ann.value().contains(":")) {
-				id = new Identifier(ann.value());
+				id = Identifier.tryParse(ann.value());
 			} else {
 				id = id(ann.value());
 			}
@@ -128,7 +128,7 @@ public final class AutoRegistry {
 	}
 
 	Identifier id(String path) {
-		return new Identifier(namespace, path);
+		return Identifier.method_60655(namespace, path);
 	}
 
 }

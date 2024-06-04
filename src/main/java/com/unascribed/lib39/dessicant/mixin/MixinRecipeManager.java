@@ -20,7 +20,7 @@ public class MixinRecipeManager {
 	@Inject(at=@At("RETURN"), method="deserialize")
 	private static void deserialize(Identifier identifier, JsonObject jsonObject, CallbackInfoReturnable<Recipe<?>> ci) {
 		if (jsonObject.has("lib39:discovered_via")) {
-			Identifier iid = new Identifier(jsonObject.get("lib39:discovered_via").getAsString());
+			Identifier iid = Identifier.tryParse(jsonObject.get("lib39:discovered_via").getAsString());
 			if (!Registries.ITEM.getOrEmpty(iid).isPresent()) {
 				Lib39Log.warn("Recipe {} is discovered by unknown item {}", identifier, iid);
 			}

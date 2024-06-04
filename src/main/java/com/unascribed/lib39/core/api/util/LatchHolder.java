@@ -50,6 +50,11 @@ public class LatchHolder<T> extends AbstractLatchReference<Holder<T>> implements
 	}
 
 	@Override
+	public boolean matches(Holder<T> other) {
+		return this.value().equals(other.value());
+	}
+
+	@Override
 	public Stream<TagKey<T>> streamTags() {
 		return isPresent() ? Stream.empty() : get().streamTags();
 	}

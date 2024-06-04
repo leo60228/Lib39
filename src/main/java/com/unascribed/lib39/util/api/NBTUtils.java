@@ -1,5 +1,6 @@
 package com.unascribed.lib39.util.api;
 
+import net.minecraft.registry.HolderLookup;
 import org.jetbrains.annotations.Nullable;
 
 import net.fabricmc.fabric.api.util.NbtType;
@@ -62,12 +63,12 @@ public class NBTUtils {
 	 * empty slots.
 	 * @see #deserializeInv
 	 */
-	public static NbtList serializeInv(Inventory inv) {
+	public static NbtList serializeInv(HolderLookup.Provider provider, Inventory inv) {
 		NbtList out = new NbtList();
 		for (int i = 0; i < inv.size(); i++) {
 			ItemStack is = inv.getStack(i);
 			if (!is.isEmpty()) {
-				NbtCompound c = is.writeNbt(new NbtCompound());
+				NbtCompound c = (NbtCompound) is.encode(provider, new NbtCompound());
 				if (is.getCount() > 127) {
 					c.putInt("Count", is.getCount());
 				}
@@ -82,7 +83,7 @@ public class NBTUtils {
 	 * Deserialize an NbtList created by {@link #serializeInv} into the given Inventory. The
 	 * Inventory will be cleared first. Can load large stacks written by serializeInv.
 	 */
-	public static void deserializeInv(NbtList tag, Inventory inv) {
+	public static void deserializeInv(HolderLookup.Provider provider, NbtList tag, Inventory inv) {
 		inv.clear();
 		for (int i = 0; i < tag.size(); i++) {
 			NbtCompound c = tag.getCompound(i);
@@ -91,7 +92,7 @@ public class NBTUtils {
 				c = c.copy();
 				c.putInt("Count", 1);
 			}
-			ItemStack is = ItemStack.fromNbt(c);
+			ItemStack is = ItemStack.fromNbt(provider, c);
 			is.setCount(count);
 			inv.setStack(c.getInt("Slot"), is);
 		}

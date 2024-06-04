@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 
 public class Lib39Weld implements ModInitializer {
 
-	private static final Identifier SILENCE_ID = new Identifier("lib39-weld", "silence");
+	private static final Identifier SILENCE_ID = Identifier.method_60655("lib39-weld", "silence");
 	
 	public static final SoundEvent SILENCE = SoundEvent.createVariableRangeEvent(SILENCE_ID);
 	

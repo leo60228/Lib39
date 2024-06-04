@@ -24,7 +24,7 @@ public class MixinSound {
 	@Inject(at=@At("HEAD"), method="getLocation", cancellable=true)
 	public void lib39Keygen$getLocation(CallbackInfoReturnable<Identifier> ci) {
 		if (Lib39Keygen.isModuleFile(id)) {
-			ci.setReturnValue(new Identifier(id.getNamespace(), "sounds/"+id.getPath()));
+			ci.setReturnValue(Identifier.method_60655(id.getNamespace(), "sounds/"+id.getPath()));
 		}
 	}
 	

@@ -2,6 +2,7 @@ package com.unascribed.lib39.dessicant.mixin;
 
 import java.util.List;
 
+import net.minecraft.registry.RegistryKey;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -31,14 +32,14 @@ public class MixinAbstractBlock {
 	public void getDroppedStacks(BlockState state, LootContextParameterSet.Builder builder, CallbackInfoReturnable<List<ItemStack>> ci) {
 		if (ci.getReturnValue().isEmpty()) {
 			var self = (AbstractBlock)(Object)this;
-			Identifier id = self.getLootTableId();
+			RegistryKey<LootTable> id = self.getLootTableId();
 			if (id == LootTables.EMPTY) {
 				return;
 			}
 			var lootContext = builder.add(LootContextParameters.BLOCK_STATE, state).build(LootContextTypes.BLOCK);
 			ServerWorld serverWorld = lootContext.getWorld();
-			LootTable lootTable = serverWorld.getServer().getLootManager().getLootTable(id);
-			if (lootTable == LootTable.EMPTY && DessicantData.optedInNamespaces.contains(id.getNamespace()) && (self instanceof SimpleLootBlock || self.asItem() != Items.AIR)) {
+			LootTable lootTable = serverWorld.getServer().method_58576().getLootTable(id);
+			if (lootTable == LootTable.EMPTY && DessicantData.optedInNamespaces.contains(id.getValue().getNamespace()) && (self instanceof SimpleLootBlock || self.asItem() != Items.AIR)) {
 				ItemStack loot;
 				if (self instanceof SimpleLootBlock slb) {
 					loot = slb.getLoot(state);

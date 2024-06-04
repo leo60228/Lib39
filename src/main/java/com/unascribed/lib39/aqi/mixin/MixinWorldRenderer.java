@@ -1,5 +1,8 @@
 package com.unascribed.lib39.aqi.mixin;
 
+import net.minecraft.class_9779;
+import net.minecraft.world.tick.TickManager;
+import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -40,13 +43,15 @@ public class MixinWorldRenderer {
 	
 	@Inject(method="render",
 			at=@At(value="CONSTANT", args="stringValue=blockentities", ordinal=0))
-	private void lib39Aqi$afterEntities(MatrixStack matrices, float tickDelta, long limitTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, @Coerce Object mat, CallbackInfo ci) {
+	private void lib39Aqi$afterEntities(class_9779 arg, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightmapTextureManager lightmapTextureManager, Matrix4f projectionMatrix, Matrix4f matrix4f, CallbackInfo ci) {
 		if (transparencyShader != null) return;
 		world.getProfiler().swap("lib39-aqi:opaque_particles");
 		AQIState.onlyRenderNonOpaqueParticles = false;
 		AQIState.onlyRenderOpaqueParticles = true;
+		TickManager tickManager = this.client.world.getTickManager();
+		float tickDelta = arg.method_60637(false);
 		try {
-			client.particleManager.renderParticles(matrices, bufferBuilders.getEntityVertexConsumers(), lightmapTextureManager, camera, tickDelta);
+			client.particleManager.renderParticles(lightmapTextureManager, camera, tickDelta);
 		} finally {
 			AQIState.onlyRenderOpaqueParticles = false;
 		}

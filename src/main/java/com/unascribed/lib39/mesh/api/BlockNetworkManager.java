@@ -18,6 +18,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Table;
 
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.HolderLookup;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -36,8 +37,8 @@ public class BlockNetworkManager extends PersistentState {
 		return networkTypes.inverse().get(type);
 	}
 
-	public static PersistentState.C_vpqwshwc<BlockNetworkManager> getPersistentStateType(ServerWorld world) {
-		return new PersistentState.C_vpqwshwc<>(() -> new BlockNetworkManager(world), tag -> BlockNetworkManager.readNbt(world, tag), null);
+	public static PersistentState.Factory<BlockNetworkManager> getPersistentStateType(ServerWorld world) {
+		return new PersistentState.Factory<>(() -> new BlockNetworkManager(world), (tag, provider) -> BlockNetworkManager.readNbt(world, tag), null);
 	}
 	
 	protected final ServerWorld world;
@@ -75,7 +76,7 @@ public class BlockNetworkManager extends PersistentState {
 	}
 
 	@Override
-	public NbtCompound writeNbt(NbtCompound nbt) {
+	public NbtCompound writeNbt(NbtCompound nbt, HolderLookup.Provider provider) {
 		NbtCompound networks = new NbtCompound();
 		for (BlockNetwork<?, ?> net : this.networks.values()) {
 			NbtCompound en = new NbtCompound();

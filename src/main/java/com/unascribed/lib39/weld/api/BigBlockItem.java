@@ -36,7 +36,7 @@ public class BigBlockItem extends BlockItem {
 		if (context.getSide() == Direction.DOWN) {
 			origin = origin.down(b.getYSize(state)-1);
 		}
-		Box box = Box.method_54784(origin, origin.add(b.getXSize(state)-1, b.getYSize(state)-1, b.getZSize(state)-1));
+		Box box = Box.enclosing(origin, origin.add(b.getXSize(state)-1, b.getYSize(state)-1, b.getZSize(state)-1));
 		if (!w.getEntityCollisions(null, box).isEmpty()) {
 			return false;
 		}
