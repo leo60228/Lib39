@@ -359,7 +359,7 @@ publishing {
 	repositories {
 		if (project.hasProperty("publish-username")) {
 			maven {
-				url "https://maven.pkg.github.com/leo60228/Lib39"
+				url "https://maven.vriska.dev/snapshots"
 				credentials {
 					username project.getProperty("publish-username")
 					password project.getProperty("publish-password")
