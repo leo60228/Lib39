@@ -128,7 +128,7 @@ public final class AutoRegistry {
 	}
 
 	Identifier id(String path) {
-		return Identifier.method_60655(namespace, path);
+		return Identifier.of(namespace, path);
 	}
 
 }

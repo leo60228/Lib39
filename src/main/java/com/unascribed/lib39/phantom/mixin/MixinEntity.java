@@ -25,10 +25,10 @@ import net.minecraft.world.World;
 public abstract class MixinEntity {
 
 	@Shadow
-	public boolean onGround;
+    private boolean onGround;
 	
 	@Shadow
-	public World world;
+    private World world;
 	
 	@Shadow
 	public abstract double getX();

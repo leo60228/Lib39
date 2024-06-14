@@ -23,7 +23,7 @@ import net.minecraft.world.chunk.WorldChunk;
 public abstract class MixinWorldChunk {
 
 	@Shadow @Final
-	private World world;
+    World world;
 	
 	@Inject(at=@At("HEAD"), method="getBlockEntity(Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/world/chunk/WorldChunk$CreationType;)Lnet/minecraft/block/entity/BlockEntity;", cancellable=true)
 	public void lib39Phantom$getBlockEntity(BlockPos pos, WorldChunk.CreationType creationType, CallbackInfoReturnable<BlockEntity> ci) {

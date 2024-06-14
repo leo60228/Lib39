@@ -20,7 +20,7 @@ import net.minecraft.text.Text;
 @Mixin(ItemStack.class)
 public class MixinItemStack {
 
-	@Inject(at=@At(value="INVOKE", target="net/minecraft/item/Item.appendTooltip(Lnet/minecraft/item/ItemStack;Lnet/minecraft/world/World;Ljava/util/List;Lnet/minecraft/client/item/TooltipContext;)V"),
+	@Inject(at=@At(value="INVOKE", target="Lnet/minecraft/item/Item;appendTooltip(Lnet/minecraft/item/ItemStack;Lnet/minecraft/item/Item$TooltipContext;Ljava/util/List;Lnet/minecraft/client/item/TooltipConfig;)V"),
 			method="getTooltip")
 	public void lib39Dessicant$getTooltip(CallbackInfoReturnable<List<Text>> cir, @Local List<Text> tooltip) {
 		ItemStack self = (ItemStack)(Object)this;
